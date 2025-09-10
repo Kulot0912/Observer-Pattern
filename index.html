@@ -1,1 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Observer Pattern Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    .observer { border: 1px solid #333; padding: 10px; margin: 10px; display: inline-block; width: 150px; }
+  </style>
+</head>
+<body>
+  <h2>Observer Pattern Demo</h2>
+  <button onclick="subject.setState(subject.state + 1)">Increase State</button>
+  <button onclick="subject.setState(subject.state - 1)">Decrease State</button>
+  <p>Subject State: <span id="stateValue">0</span></p>
 
+  <div class="observer" id="observer1">Observer 1: 0</div>
+  <div class="observer" id="observer2">Observer 2: 0</div>
+  <div class="observer" id="observer3">Observer 3: 0</div>
+
+  <script>
+    // Subject Class
+    class Subject {
+      constructor() {
+        this.state = 0;
+        this.observers = [];
+      }
+
+      addObserver(observer) {
+        this.observers.push(observer);
+      }
+
+      setState(newState) {
+        this.state = newState;
+        document.getElementById("stateValue").innerText = this.state;
+        this.notifyAll();
+      }
+
+      notifyAll() {
+        this.observers.forEach(observer => observer.update(this.state));
+      }
+    }
+
+    // Observer Class
+    class Observer {
+      constructor(elementId) {
+        this.elementId = elementId;
+      }
+
+      update(state) {
+        document.getElementById(this.elementId).innerText = this.elementId + ": " + state;
+      }
+    }
+
+    // Create Subject
+    const subject = new Subject();
+
+    // Create Observers
+    const observer1 = new Observer("observer1");
+    const observer2 = new Observer("observer2");
+    const observer3 = new Observer("observer3");
+
+    // Attach Observers to Subject
+    subject.addObserver(observer1);
+    subject.addObserver(observer2);
+    subject.addObserver(observer3);
+  </script>
+</body>
+</html>
